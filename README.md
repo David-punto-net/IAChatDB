@@ -10,10 +10,10 @@ Esta aplicación desarrollada en **.NET 8** con **Blazor Server**, **Semantic Ke
   - **Chat de análisis de los datos**: Interpreta los resultados manteniondo una conversación con el usuario.
 
 ## Tecnologías utilizadas
-- **.NET 8**
-- **Blazor Server**
-- **Semantic Kernel**
-- **GPT-4o-mini**
-- **SQL Server**
+- .NET 8**
+- Blazor Server
+- Semantic Kernel**
+- GPT-4o-mini
+- SQL Server
 
 ![image](https://github.com/user-attachments/assets/53f1164b-b954-4e6f-a7f7-4ffc20cb0dbb)
