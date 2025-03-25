@@ -2,7 +2,7 @@
 Esta aplicación desarrollada en **.NET 8** con **Blazor Server**, **Semantic Kernel** y un  **LLM - GPT-4o Mini** permite generar consultas SQL automáticamente a partir de prompts en lenguaje natural. Además, ofrece un chat basado en los datos obtenidos, donde la IA puede realizar análisis detallados de los resultados.
 
 ## Características principales
-- **Generación automática de consultas SQL**: La IA construye consultas en base al esquema de la base de datos SQL Server.
+- **Generación automática de consultas SQL**: La IA crea consultas en base al esquema de la base de datos SQL Server.
 - **Ejecución de consultas**: Los resultados de la consulta generada se obtienen directamente de la base de datos.
 - **Análisis de datos con IA**: La IA atraves de un chat ofrece explicaciones y análisis de los datos obtenidos.
 - **Dos roles de IA**:
