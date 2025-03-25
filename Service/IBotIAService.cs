@@ -1,0 +1,12 @@
+﻿using IAChatDB.DTOs;
+using IAChatDB.Models;
+using Microsoft.SemanticKernel.ChatCompletion;
+
+namespace IAChatDB.Service;
+
+public interface IBotIAService
+{
+    Task<AIQueryModel> GetIA_SQLQueryAsync(string userMensaje, List<string> schemaRaw);
+    Task<string> GetIA_ChatAsync(ChatHistory chatHistory);
+    Task<MudChartSpecDTO> GetIA_ChartAsync(List<List<string>> DataDB);
+}

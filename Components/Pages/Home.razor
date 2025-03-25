@@ -1,0 +1,160 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Fixed="false">
+    <MudGrid Class="my-2">
+
+        <MudItem xs="12">
+            <h3>
+                Chatea con tu base de datos
+                <div style="float: right">
+                    <MudIconButton OnClick="@(() => ToggleDrawer(Anchor.End))" Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
+                </div>
+            </h3>
+            <MudDivider Class="mb-6"></MudDivider>
+            <MudGrid>
+                <MudItem xs="8">
+
+                    <EditForm Class="mb-6" Model="@Model" FormName="IaChatSql" OnSubmit="ObtenerDatosSql">
+                        <div>
+                            <MudTextField @bind-Value="@Model.PromptIASQL" T="string" Label="Ingresa tu consulta a la IA" Variant="Variant.Text" Lines="3" />
+                        </div>
+                        <div>
+                            <MudButton Class="my-6" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" ButtonType="ButtonType.Submit" Color="Color.Primary">Enviar</MudButton>
+                        </div>
+                    </EditForm>
+
+                    @if (Loading)
+                    {
+                        <p Class="my-6">@LoadingMessage <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" /></p>
+                    }
+
+                </MudItem>
+                <MudItem xs="4">
+                </MudItem>
+            </MudGrid>
+            <MudTabs KeepPanelsAlive="true" Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                <MudTabPanel Text="Resultado">
+                    @if (DataDB.Count > 0)
+                    {
+                        <MudTable SortLabel="Sort By" Items="@DataDB.Skip(1)" Bordered="true" Striped="true">
+                            <HeaderContent>
+                                @foreach (var item in DataDB.FirstOrDefault()!)
+                                {
+                                    <MudTh>@item</MudTh>
+                                }
+                            </HeaderContent>
+                            <RowTemplate>
+                                @foreach (var item in context)
+                                {
+                                    <MudTd DataLabel="item">@item</MudTd>
+                                }
+                            </RowTemplate>
+                            <PagerContent>
+                                <MudTablePager />
+                            </PagerContent>
+                        </MudTable>
+                    }
+                    else
+                    {
+                        <p>@Respuesta</p>
+                    }
+                </MudTabPanel>
+                <MudTabPanel Text="Query SQL">
+                    <div>
+                        <MudTextField @bind-Value="@Respuesta" Text="@Respuesta" T="string" Label="Edite la query generada." Variant="Variant.Text" Lines="5" />
+                    </div>
+                </MudTabPanel>
+                <MudTabPanel Text="Gráficos">
+                    <MudButton Class="my-6" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" ButtonType="ButtonType.Button" OnClick="OnIAChart" Color="Color.Primary">Chart</MudButton>
+
+                    @if (ChatGraficos)
+                    {
+                        <MudPaper Class="pa-4">
+
+                            <MudText Typo="Typo.h6">@RespuestaJsonChart?.XAxis.Label vs @RespuestaJsonChart?.YAxis.Label</MudText>
+
+                            <MudChart ChartType="ChartType.Donut"
+                                      InputLabels="@Categories"
+                                      InputData="@Series"
+                                      Width="300px"
+                                      Height="300px" />
+
+                        </MudPaper>
+                    }
+
+                </MudTabPanel>
+
+            </MudTabs>
+        </MudItem>
+
+        <MudItem xs="4">
+            <MudDrawer Open="@open" Anchor="Anchor.Right" ClipMode="DrawerClipMode.Always" Elevation="1" Breakpoint="Breakpoint.SmAndUp" Width="30%" Variant="@DrawerVariant.Persistent">
+                <MudTabs KeepPanelsAlive="true" Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                    <MudTabPanel class="chat-drawer" Text="Chat">
+                        <p class="mb-6">Solicita a la IA información sobre el resultado de la consulta.</p>
+
+                        <div @ref="_scrollContainer" id="unique_id_scroll_section" class="ma-0" style="height:350px;overflow: auto;">
+                            <MudPaper Elevation="0" Class="d-flex flex-column justify-space-between py-6">
+
+                                @if (ChatActivo)
+                                {
+                                    @foreach (var item in chatHistory)
+                                    {
+                                        @if (@item.Content!.Length > 0)
+                                        {
+                                            @if (item.Role == AuthorRole.User)
+                                            {
+                                                <MudChat ChatPosition="ChatBubblePosition.End">
+                                                    <MudAvatar>Tú</MudAvatar>
+                                                    <MudChatBubble>
+                                                        @item.Content
+                                                    </MudChatBubble>
+                                                </MudChat>
+                                            }
+                                            else if (item.Role == AuthorRole.Assistant)
+                                            {
+                                                <MudChat ChatPosition="ChatBubblePosition.Start" Color="Color.Transparent">
+                                                    <MudAvatar Color="Color.Primary">IA</MudAvatar>
+                                                    <MudChatBubble>
+                                                        @(new MarkupString(ConvertMarkdownToHtml(item.Content)))
+                                                    </MudChatBubble>
+                                                </MudChat>
+                                            }
+                                        }
+                                    }
+                                    @if (chatLoading)
+                                    {
+                                        <MudProgressCircular class="my-6" Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+                                    }
+                                }
+
+                                <MudScrollToTop Selector="#unique_id_scroll_section"
+                                                VisibleCssClass="visible absolute"
+                                                HiddenCssClass="invisible">
+                                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowUpward" Color="Color">Ir al inicio del chat</MudButton>
+                                </MudScrollToTop>
+                            </MudPaper>
+                        </div>
+
+                        <EditForm Class="mb-6" Model="@Model" FormName="IaChat" OnSubmit="OnIAChat">
+                            <div>
+                                <MudTextField @bind-Value="@Model.PromptIAChat" T="string" Label="Ingresa tu consulta a la IA" Variant="Variant.Text" Lines="5" />
+                            </div>
+                            <div>
+                                @if (!chatLoading)
+                                {
+                                    <MudButton Class="my-6" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Enviar</MudButton>
+                                    <MudButton Class="ml-16" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClearChat" Color="Color.Primary">Limpiar</MudButton>
+                                }
+                            </div>
+                        </EditForm>
+
+                    </MudTabPanel>
+                </MudTabs>
+            </MudDrawer>
+        </MudItem>
+
+    </MudGrid>
+</MudContainer>
