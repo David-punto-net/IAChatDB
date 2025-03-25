@@ -1,5 +1,5 @@
 # IAChatDB
-Esta aplicación desarrollada en **.NET 8** con **Blazor Server**, **Semantic Kernel** y un  **LLM - GPT-4o-mini** permite generar consultas SQL automáticamente a partir de prompts en lenguaje natural. Además, ofrece un chat basado en los datos obtenidos, donde la IA puede realizar análisis detallados de los resultados.
+Esta aplicación desarrollada en **.NET 8** con **Blazor Server**, **Semantic Kernel** y un  **LLM - GPT-4o Mini** permite generar consultas SQL automáticamente a partir de prompts en lenguaje natural. Además, ofrece un chat basado en los datos obtenidos, donde la IA puede realizar análisis detallados de los resultados.
 
 ## Características principales
 - **Generación automática de consultas SQL**: La IA construye consultas en base al esquema de la base de datos SQL Server.
