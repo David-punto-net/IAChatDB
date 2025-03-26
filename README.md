@@ -7,7 +7,7 @@ Esta aplicación desarrollada en **.NET 8** con **Blazor Server**, **Semantic Ke
 - **Análisis de datos con IA**: La IA atraves de un chat ofrece explicaciones y análisis de los datos obtenidos.
 - **Dos roles de IA**:
   - **Generador de consultas SQL**: Genera consultas precisas basadas en el esquema de la base de datos.
-  - **Chat de análisis de los datos**: Interpreta los resultados manteniondo una conversación con el usuario.
+  - **Chat de análisis de los datos**: Interpreta los resultados manteniendo una conversación con el usuario.
 
 ## Tecnologías utilizadas
 - .NET 8**
