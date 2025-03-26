@@ -8,5 +8,5 @@ public interface IBotIAService
 {
     Task<AIQueryModel> GetIA_SQLQueryAsync(string userMensaje, List<string> schemaRaw);
     Task<string> GetIA_ChatAsync(ChatHistory chatHistory);
-    Task<MudChartSpecDTO> GetIA_ChartAsync(List<List<string>> DataDB);
+    Task<ChartDataDto> GetIA_ChartAsync(List<List<string>> DataDB);
 }

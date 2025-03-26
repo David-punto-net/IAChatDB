@@ -14,6 +14,7 @@ public partial class Home
 {
 
     private bool Loading = false;
+    private bool LoadingChart = false;
     private bool chatLoading = false;
     private string LoadingMessage = String.Empty;
     private bool ChatActivo = false;
@@ -34,11 +35,8 @@ public partial class Home
 
     public ChatHistory chatHistory = new();
 
-    public MudChartSpecDTO RespuestaJsonChart { get; set; }= new();
-    public ChartService ChartService = new();
+    public ChartDataDto ChartData { get; set; }= new();
 
-    private string[] Categories;
-    private double[] Series;
 
     bool open = true;
     Anchor anchor;
@@ -150,15 +148,18 @@ public partial class Home
 
     public async Task OnIAChart()
     {
+        ChartData = new();
+        ChatGraficos = false;
+
+        LoadingChart = true;
         var aiResponse = await BotIAService.GetIA_ChartAsync(DataDB);
+
         ChatGraficos = true;
-        RespuestaJsonChart = aiResponse;
+        ChartData = aiResponse;
 
-        if (RespuestaJsonChart != null)
-        {
-            (Categories, Series) = ChartService.ConvertToMudChartData(RespuestaJsonChart);
-        }
+        LoadingChart = false;
 
+        StateHasChanged();
     }
     private string ConvertMarkdownToHtml(string markdown)
     {

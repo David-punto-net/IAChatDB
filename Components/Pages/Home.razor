@@ -67,19 +67,29 @@
                     </div>
                 </MudTabPanel>
                 <MudTabPanel Text="Gráficos">
-                    <MudButton Class="my-6" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" ButtonType="ButtonType.Button" OnClick="OnIAChart" Color="Color.Primary">Chart</MudButton>
+
+                    <MudButton Class="my-6" 
+                               Variant="Variant.Filled"
+                               ButtonType="ButtonType.Button"
+                               OnClick="OnIAChart"
+                               Color="Color.Primary">
+                        Generar Gráfico
+                    </MudButton>
+
+                    @if (LoadingChart)
+                    {
+                        <div>
+                            <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                        </div>
+                    }
 
                     @if (ChatGraficos)
                     {
                         <MudPaper Class="pa-4">
 
-                            <MudText Typo="Typo.h6">@RespuestaJsonChart?.XAxis.Label vs @RespuestaJsonChart?.YAxis.Label</MudText>
+                            <MudText Typo="Typo.h6">@ChartData.Title</MudText>
 
-                            <MudChart ChartType="ChartType.Donut"
-                                      InputLabels="@Categories"
-                                      InputData="@Series"
-                                      Width="300px"
-                                      Height="300px" />
+                            <MudChartView ChartData="@ChartData"></MudChartView>
 
                         </MudPaper>
                     }

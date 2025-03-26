@@ -1,2 +1,20 @@
-﻿<h3>MudChartView</h3>
+﻿@if (ChartData.ChartType == ChartType.Bar || ChartData.ChartType == ChartType.Line)
+{
+    <MudChart ChartType="ChartData.ChartType"
+              XAxisLabels="@ChartData.Categories"
+              ChartSeries="@ChartData.Series"
+              Width="100%"
+              Height="350px"
+              AxisChartOptions ="">
+    </MudChart>
+}
 
+@if (ChartData.ChartType == ChartType.Donut || ChartData.ChartType == ChartType.Pie)
+{
+    <MudChart ChartType="ChartData.ChartType"
+              Width="300px"
+              Height="300px"
+              InputLabels="@ChartData.Categories"
+              InputData="@ChartData.Series.FirstOrDefault()!.Data">
+    </MudChart>
+}
