@@ -1,9 +1,7 @@
 ﻿using IAChatDB.DTOs;
 using IAChatDB.Models;
 using IAChatDB.Service;
-using Markdig;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using Microsoft.SemanticKernel.ChatCompletion;
 using MudBlazor;
 using System.Text.Json;
@@ -12,7 +10,6 @@ namespace IAChatDB.Components.Pages;
 
 public partial class Home
 {
-
     private bool Loading = false;
     private bool LoadingChart = false;
     private bool chatLoading = false;
@@ -20,13 +17,11 @@ public partial class Home
     private bool ChatActivo = false;
     private bool ChatGraficos = false;
 
-    private ElementReference _scrollContainer;
     private bool _shouldScroll;
 
     [Inject] private IBotIAService BotIAService { get; set; } = null!;
     [Inject] private IDatabaseService DatabaseService { get; set; } = null!;
-    [Inject] private IJSRuntime JS { get; set; } = null!;
-    private IJSObjectReference? _module;
+
     public FormModel Model { get; set; } = new FormModel();
     public string? Respuesta { get; set; }
 
@@ -35,15 +30,13 @@ public partial class Home
 
     public ChatHistory chatHistory = new();
 
-    public ChartDataDto ChartData { get; set; }= new();
+    public ChartDataDto ChartData { get; set; } = new();
 
+    private bool open = true;
+    private Anchor anchor;
+    private Color Color = Color.Success;
 
-    bool open = true;
-    Anchor anchor;
-    Color Color = Color.Success;
-
-
-    void ToggleDrawer(Anchor anchor)
+    private void ToggleDrawer(Anchor anchor)
     {
         open = !open;
         this.anchor = anchor;
@@ -51,15 +44,9 @@ public partial class Home
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/scrollHelper.js");
-        }
-
         if (_shouldScroll)
         {
             _shouldScroll = false;
-            await _module!.InvokeVoidAsync("scrollToBottom", _scrollContainer);
         }
     }
 
@@ -75,11 +62,11 @@ public partial class Home
         {
             Respuesta = e.Message;
         }
-
     }
+
     public async Task ObtenerDatosSql()
     {
-        if(ValidaPromt(Model.PromptIASQL!))
+        if (ValidaPromt(Model.PromptIASQL!))
         {
             Loading = true;
             LoadingMessage = "Obteniendo datos...";
@@ -127,7 +114,6 @@ public partial class Home
             _shouldScroll = true;
             StateHasChanged();
         }
-            
     }
 
     private void ClearChat()
@@ -148,30 +134,26 @@ public partial class Home
 
     public async Task OnIAChart()
     {
-        ChartData = new();
-        ChatGraficos = false;
+        if (DataDB.Count > 0)
+        {
+            ChartData = new();
+            ChatGraficos = false;
 
-        LoadingChart = true;
-        var aiResponse = await BotIAService.GetIA_ChartAsync(DataDB);
+            LoadingChart = true;
+            var aiResponse = await BotIAService.GetIA_ChartAsync(DataDB);
 
-        ChatGraficos = true;
-        ChartData = aiResponse;
+            ChatGraficos = true;
+            ChartData = aiResponse;
 
-        LoadingChart = false;
+            LoadingChart = false;
 
-        StateHasChanged();
+            StateHasChanged();
+        }
     }
-    private string ConvertMarkdownToHtml(string markdown)
-    {
-        var pipeline = new Markdig.MarkdownPipelineBuilder()
-            .UseAdvancedExtensions()
-            .Build();
 
-        return Markdig.Markdown.ToHtml(markdown, pipeline);
-    }
     private bool ValidaPromt(string promt)
     {
-        if (!string.IsNullOrEmpty(promt)) 
+        if (!string.IsNullOrEmpty(promt))
         {
             return true;
         }
@@ -179,8 +161,5 @@ public partial class Home
         {
             return false;
         }
-
-
     }
-
 }

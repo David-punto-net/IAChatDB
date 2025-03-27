@@ -1,0 +1,57 @@
+﻿
+<div @ref="_scrollContainer" id="unique_id_scroll_section" class="ma-0" style="height: 500px;overflow: auto;">
+    <MudPaper Elevation="0" Class="d-flex flex-column justify-space-between py-6">
+
+        @if (ChatActivo)
+        {
+            @foreach (var item in ChatData)
+            {
+                @if (@item.Content!.Length > 0)
+                {
+                    @if (item.Role == AuthorRole.User)
+                    {
+                        <MudChat ChatPosition="ChatBubblePosition.End">
+                            <MudAvatar>Tú</MudAvatar>
+                            <MudChatBubble>
+                                @item.Content
+                            </MudChatBubble>
+                        </MudChat>
+                    }
+                    else if (item.Role == AuthorRole.Assistant)
+                    {
+                        <MudChat ChatPosition="ChatBubblePosition.Start" Color="Color.Transparent">
+                            <MudAvatar Color="Color.Primary">IA</MudAvatar>
+                            <MudChatBubble>
+                                @(new MarkupString(ConvertMarkdownToHtml(item.Content)))
+                            </MudChatBubble>
+                        </MudChat>
+                    }
+                }
+            }
+            @if (ChatLoading)
+            {
+                <MudProgressCircular class="my-6" Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+            }
+        }
+
+           <MudScrollToTop Selector="#unique_id_scroll_section"
+                        VisibleCssClass="visible absolute"
+                        HiddenCssClass="invisible">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowUpward" Color="Color">Ir al inicio del chat</MudButton>
+        </MudScrollToTop> 
+       
+    </MudPaper>
+</div>
+
+<EditForm Class="mb-6" Model="@Model" FormName="IaChat" OnSubmit="HandleOnIAChat">
+    <div>
+        <MudTextField @bind-Value="@Model.PromptIAChat" T="string" Label="Ingresa tu consulta a la IA" Variant="Variant.Text" Lines="5" />
+    </div>
+    <div>
+        @if (!ChatLoading)
+        {
+            <MudButton Class="my-6" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Enviar</MudButton>
+            <MudButton Class="ml-16" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="HandleClear" Color="Color.Primary">Limpiar</MudButton>
+        }
+    </div>
+</EditForm>
