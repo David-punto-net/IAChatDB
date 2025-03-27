@@ -18,7 +18,3 @@ Esta aplicación desarrollada en **.NET 8** con **Blazor Server**, **Semantic Ke
 
 ![image](https://github.com/user-attachments/assets/53f1164b-b954-4e6f-a7f7-4ffc20cb0dbb)
 
-![image](https://github.com/user-attachments/assets/242193cb-927f-4747-8c2d-74bd37beaad2)
-
-![image](https://github.com/user-attachments/assets/e96edd06-ec0a-4f43-b003-8713660513c1)
-
