@@ -16,5 +16,6 @@ Esta aplicación desarrollada en **.NET 8** con **Blazor Server**, **Semantic Ke
 - GPT-4o-mini
 - SQL Server
 
-![image](https://github.com/user-attachments/assets/53f1164b-b954-4e6f-a7f7-4ffc20cb0dbb)
+![image](https://github.com/user-attachments/assets/2a539555-b17f-4beb-a64e-84c49320cc66)
+
 
